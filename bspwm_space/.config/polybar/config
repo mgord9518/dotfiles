@@ -1,0 +1,358 @@
+; mgord9518's Polybar configuration
+; Requires:
+; * Nerd fonts
+
+[colors]
+background     = ${env:p_bg:000}
+foreground     = ${env:p_fg:FFF}
+foreground-alt = ${env:p_fga:AAA}
+primary        = ${env:p_pm:6655AA}
+alert = #bd2c40
+
+[bar/primary]
+; Change to match monitor DPI
+dpi=144
+
+width = 100%
+height = 64
+fixed-center = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+border-bottom-size = ${env:bd_wth:4}
+border-color = ${colors.primary}
+
+padding-left = 0
+padding-right = 2
+
+module-margin-left = 1
+module-margin-right = 1
+
+font-0 = ShureTech Mono Nerd Font:pixelsize=14;5
+font-1 = Hurmit Nerd Font Mono:pixelsize=24;7
+font-2 = Hurmit Nerd Font Mono:pixelsize=16;6
+font-3 = Hurmit Nerd Font Mono:pixelsize=30;10
+
+modules-left   = bspwm
+modules-center = rofi 
+modules-right  = xwindow
+
+override-redirect = false
+
+;cursor-click = pointer
+
+[bar/secondary]
+dpi=144
+
+width = 100%
+height = 48
+bottom = true
+fixed-center = true
+
+module-margin-left = 1
+module-margin-right = 1
+
+font-0 = ShureTech Mono Nerd Font:pixelsize=14;6
+font-1 = Hurmit Nerd Font Mono:pixelsize=22;7
+font-2 = Hurmit Nerd Font Mono:pixelsize=18;6
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+modules-left = battery backlight pulseaudio 
+modules-center = date
+modules-right = filesystem memory cpu temperature 
+
+border-top-size = ${env:bd_wth:4}
+border-color = ${colors.primary}
+
+padding-left = 1
+padding-right = 1
+
+[module/xwindow]
+type = internal/xwindow
+label = %{T1}%title:0:40:...%
+
+[module/filesystem]
+type = internal/fs
+interval = 60
+
+mount-0 = /
+
+label-mounted = %{T3}%{T1} %percentage_used%%
+label-unmounted = %mountpoint% not mounted
+
+[module/rofi]
+type = custom/text
+content-padding = 2
+content = "%{T4}%{T1}"
+content-background = ${colors.primary}
+click-left = rofi_menu
+
+[module/bspwm]
+type = internal/bspwm
+
+label-focused = %{T2}%name%%{T1}
+label-focused-foreground = ${colors.foreground}
+label-focused-background = ${colors.primary}
+label-focused-padding = 2
+
+label-occupied = %{T2}%name%%{T1}
+label-occupied-padding = 2
+
+label-urgent = %{T2}%name%%{T1}
+label-urgent-background = ${colors.alert}
+label-urgent-padding = 2
+
+label-empty = %{T2}%name%%{T1}
+label-empty-foreground = ${colors.foreground-alt}
+label-empty-padding = 2
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = "%{T2}%{T1} "
+label = %percentage%%
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = "%{T2}%{T1} "
+label = %percentage_used%%
+
+[module/wlan]
+type = internal/network
+interface = net1
+interval = 3.0
+
+format-connected = <ramp-signal> <label-connected>
+format-connected-underline = #9f78e1
+label-connected = %essid%
+
+format-disconnected =
+;format-disconnected = <label-disconnected>
+;format-disconnected-underline = ${self.format-connected-underline}
+;label-disconnected = %ifname% disconnected
+;label-disconnected-foreground = ${colors.foreground-alt}
+
+ramp-signal-0 = 
+ramp-signal-1 = 
+ramp-signal-2 = 
+ramp-signal-3 = 
+ramp-signal-4 = 
+ramp-signal-foreground = ${colors.foreground-alt}
+
+[module/eth]
+type = internal/network
+interface = eno1
+interval = 3.0
+
+format-connected-underline = ${colors.primary}
+format-connected-prefix = ""
+format-connected-prefix-foreground = ${colors.foreground-alt}
+label-connected = %local_ip%
+
+format-disconnected =
+;format-disconnected = <label-disconnected>
+;format-disconnected-underline = ${self.format-connected-underline}
+;label-disconnected = %ifname% disconnected
+;label-disconnected-foreground = ${colors.foreground-alt}
+
+[module/date]
+type = internal/date
+interval = 5
+
+date = %m-%d
+
+time = %{T2}%{T1} %H%M
+;time-alt = %H%M%S
+
+format-prefix-foreground = ${colors.foreground-alt}
+format-padding = 2
+format-background = ${colors.primary}
+
+;format-underline = ${colors.primary}
+label = %time%
+
+[module/backlight]
+type = internal/backlight
+;interval = 1
+;format = %{T1} <label>
+card = intel_backlight
+format = %{T2}%{T1} <label>
+label = %percentage%%
+;exec = /bin/sh -c 'brightnessctl i | grep "Current brightness" | cut -d"(" -f2 | cut -d")" -f1'
+
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+format-volume = <label-volume>
+label-volume = %{T3}蓼 %{T1}%percentage%%
+label-volume-foreground = ${root.foreground}
+
+;label-muted = 🔇 muted
+format-muted = <label-muted>
+label-muted = %{T3}蓼 %{T1}%percentage%%
+label-muted-foreground = #666
+
+bar-volume-width = 10
+;bar-volume-foreground-0 = #55aa55
+;bar-volume-foreground-1 = #55aa55
+;bar-volume-foreground-2 = #55aa55
+;bar-volume-foreground-3 = #55aa55
+;bar-volume-foreground-4 = #55aa55
+;bar-volume-foreground-5 = #f5a70a
+;bar-volume-foreground-6 = #ff5555
+bar-volume-gradient = false
+bar-volume-indicator = |
+;bar-volume-indicator-font = 2
+bar-volume-fill = "#"
+;bar-volume-fill-font = 2
+bar-volume-empty = " "
+;bar-volume-empty-font = 2
+bar-volume-empty-foreground = ${colors.foreground}
+
+[module/alsa]
+type = internal/alsa
+
+format-volume = <label-volume> <bar-volume>
+label-volume = VOL
+label-volume-foreground = ${root.foreground}
+
+format-muted-prefix = " "
+format-muted-foreground = ${colors.foreground-alt}
+label-muted = sound muted
+
+bar-volume-width = 10
+bar-volume-foreground-0 = #55aa55
+bar-volume-foreground-1 = #55aa55
+bar-volume-foreground-2 = #55aa55
+bar-volume-foreground-3 = #55aa55
+bar-volume-foreground-4 = #55aa55
+bar-volume-foreground-5 = #f5a70a
+bar-volume-foreground-6 = #ff5555
+bar-volume-gradient = false
+bar-volume-indicator = |
+bar-volume-indicator-font = 2
+bar-volume-fill = ─
+bar-volume-fill-font = 2
+bar-volume-empty = ─
+bar-volume-empty-font = 2
+bar-volume-empty-foreground = ${colors.foreground-alt}
+
+[module/battery]
+type = internal/battery
+battery = BAT1
+adapter = ADP1
+full-at = 98
+
+format-charging = %{T3}<animation-charging>%{T1} <label-charging>
+
+;format-discharging-prefix = ""
+;format-discharging-prefix-foreground = ${colors.primary}
+format-discharging = %{T3}<ramp-capacity>%{T1} <label-discharging>
+
+format-full-prefix = "%{T3}%{T1} "
+;format-full-prefix-foreground = ${colors.primary}
+
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+ramp-capacity-5 = 
+ramp-capacity-6 = 
+ramp-capacity-7 = 
+ramp-capacity-8 = 
+ramp-capacity-9 = 
+ramp-capacity-10 = 
+;ramp-capacity-foreground = ${colors.foreground-alt}
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+animation-charging-5 = 
+animation-charging-6 = 
+animation-charging-7 = 
+animation-charging-8 = 
+animation-charging-9 = 
+animation-charging-10 = 
+animation-charging-11 = 
+animation-charging-12 = 
+animation-charging-13 = 
+animation-charging-14 = 
+animation-charging-15 = 
+animation-charging-16 = 
+;animation-charging-foreground = ${colors.foreground-alt}
+animation-charging-framerate = 50
+
+animation-discharging-foreground = ${colors.foreground-alt}
+animation-discharging-framerate = 100
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 60
+
+format = <ramp><label> 
+;format-underline = ${colors.primary}
+format-warn = <ramp><label-warn>
+;format-warn-background = #aaaa00
+
+label = %{T1} %temperature-c%
+label-warn = %%{T1} %temperature-c%
+;label-warn-foreground = #ffff00
+
+ramp-0 = %{T3}
+ramp-1 = %{T3}
+ramp-2 = %{T3}
+ramp-3 = %{T3}
+ramp-4 = %{T3}
+;ramp-foreground = ${colors.foreground-alt}
+
+[module/powermenu]
+type = custom/menu
+
+expand-right = true
+
+format-spacing = 1
+
+label-open = 
+label-open-foreground = ${colors.secondary}
+label-close =  cancel
+label-close-foreground = ${colors.secondary}
+label-separator = |
+label-separator-foreground = ${colors.foreground-alt}
+
+menu-0-0 = reboot
+menu-0-0-exec = menu-open-1
+menu-0-1 = power off
+menu-0-1-exec = menu-open-2
+
+menu-1-0 = cancel
+menu-1-0-exec = menu-open-0
+menu-1-1 = reboot
+menu-1-1-exec = sudo reboot
+
+menu-2-0 = power off
+menu-2-0-exec = sudo poweroff
+menu-2-1 = cancel
+menu-2-1-exec = menu-open-0
+
+[settings]
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+;pseudo-transparency = false
+
+[global/wm]
+margin-top = 0
+margin-bottom = 0
+
+; vim:ft=dosini
